@@ -35,17 +35,9 @@ export const callPublicApi = async () => {
 };
 
 // Función para llamadas protegidas con JWT (Auth0)
-export const callProtectedApi = async (endpoint, getAccessTokenSilently) => {
+export const callProtectedApi = async (endpoint, token) => {
     try {
-        console.log('Getting access token...');
-        const token = await getAccessTokenSilently({
-            authorizationParams: {
-                audience: process.env.REACT_APP_AUTH0_AUDIENCE,
-                scope: "openid profile email"
-            }
-        });
-
-        console.log('Token obtained, length:', token.length);
+        console.log('Using access token, length:', token.length);
         console.log('Calling protected endpoint:', `${API_BASE_URL}${endpoint}`);
 
         const response = await fetch(`${API_BASE_URL}${endpoint}`, {
@@ -80,21 +72,14 @@ export const callProtectedApi = async (endpoint, getAccessTokenSilently) => {
 };
 
 // Funciones específicas para cada endpoint
-export const getProfile = (getAccessTokenSilently) =>
-    callProtectedApi('/protected/profile', getAccessTokenSilently);
+export const getProfile = (token) =>
+    callProtectedApi('/protected/profile', token);
 
-export const getUserInfo = (getAccessTokenSilently) =>
-    callProtectedApi('/protected/user-info', getAccessTokenSilently);
+export const getUserInfo = (token) =>
+    callProtectedApi('/protected/user-info', token);
 
-export const testProtectedPost = async (getAccessTokenSilently) => {
+export const testProtectedPost = async (token) => {
     try {
-        const token = await getAccessTokenSilently({
-            authorizationParams: {
-                audience: process.env.REACT_APP_AUTH0_AUDIENCE,
-                scope: "openid profile email"
-            }
-        });
-
         const response = await fetch(`${API_BASE_URL}/protected/test`, {
             method: 'POST',
             headers: {

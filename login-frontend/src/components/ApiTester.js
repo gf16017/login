@@ -14,7 +14,9 @@ const ApiTester = () => {
         try {
             let data;
             if (isProtected) {
-            data = await callProtectedApi(endpoint, getAccessTokenSilently);
+                const token = await getAccessTokenSilently();
+                data = await callProtectedApi(endpoint, token);
+
             } else {
                 data = await callPublicApi(endpoint);
             }
