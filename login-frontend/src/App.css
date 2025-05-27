@@ -1,8 +1,21 @@
+body {
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
 .App {
   text-align: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
 }
 
 .App-header {

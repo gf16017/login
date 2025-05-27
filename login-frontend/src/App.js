@@ -1,14 +1,22 @@
 import React from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import LoginButton from './components/LoginButton';
-import LogoutButton from './components/LogoutButton';
-import Profile from './components/Profile';
-import ApiTester from './components/ApiTester';
 import Loading from './components/Loading';
+import Dashboard from './components/Dashboard';
 import './App.css';
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate
+} from "react-router-dom";
+
+const ProtectedDashboard = withAuthenticationRequired(Dashboard, {
+    onRedirecting: () => <Loading />,
+});
 
 function App() {
-  const { isLoading, error, isAuthenticated, user } = useAuth0();
+  const { isLoading, error, isAuthenticated } = useAuth0();
 
   if (error) {
     return <div className="error">Error: {error.message}</div>;
@@ -19,31 +27,27 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Mi App con Auth0</h1>
-        
-        {!isAuthenticated ? (
-          <div className="login-section">
-            <p>Por favor, inicia sesión para continuar</p>
-            <LoginButton />
-          </div>
-        ) : (
-          <div className="authenticated-section">
-            <div className="user-info">
-              <img src={user.picture} alt={user.name} className="user-avatar" />
-              <span>Bienvenido, {user.name}!</span>
-              <LogoutButton />
-            </div>
-            
-            <div className="content">
-              <Profile />
-              <ApiTester />
-            </div>
-          </div>
-        )}
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              !isAuthenticated ? (
+                <div className="login-section">
+                  <h1>Mi App con Auth0</h1>
+                  <p>Por favor, inicia sesión para continuar</p>
+                  <LoginButton />
+                </div>
+              ) : (
+                <Navigate to="/dashboard" replace={true} />
+              )
+            }
+          />
+          <Route path="/dashboard" element={<ProtectedDashboard />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
