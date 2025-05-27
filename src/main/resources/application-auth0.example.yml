@@ -1,0 +1,7 @@
+auth0:
+  domain: your-domain.auth0.com
+  clientId: your-client-id
+  clientSecret: your-client-secret
+  audience: your-api-identifier
+  issuer: https://your-domain.auth0.com/
+  callbackUrl: http://localhost:8080/callback 

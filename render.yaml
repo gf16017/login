@@ -1,0 +1,52 @@
+services:
+  - type: web
+    name: login-backend
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      # Variables de Auth0
+      - key: AUTH0_DOMAIN
+        value: dev-w4kmffqu86f3iz7k.us.auth0.com
+      - key: AUTH0_CLIENT_ID
+        value: UNICXAl1jF8qeyOj4sDWbBB2PoGhdOSy
+      - key: AUTH0_CLIENT_SECRET
+        sync: false
+      - key: AUTH0_AUDIENCE
+        value: https://dev-w4kmffqu86f3iz7k.us.auth0.com/api/v2/
+      - key: AUTH0_ISSUER
+        value: https://dev-w4kmffqu86f3iz7k.us.auth0.com/
+      - key: AUTH0_CALLBACK_URL
+        value: https://login-backend.onrender.com/callback
+
+  - type: web
+    name: login-frontend
+    env: docker
+    dockerfilePath: ./login-frontend/Dockerfile
+    plan: free
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://login-backend.onrender.com
+      # Variables de Auth0 para el frontend
+      - key: REACT_APP_AUTH0_DOMAIN
+        value: dev-w4kmffqu86f3iz7k.us.auth0.com
+      - key: REACT_APP_AUTH0_CLIENT_ID
+        value: UNICXAl1jF8qeyOj4sDWbBB2PoGhdOSy
+      - key: REACT_APP_AUTH0_AUDIENCE
+        value: https://dev-w4kmffqu86f3iz7k.us.auth0.com/api/v2/
+      - key: REACT_APP_AUTH0_CALLBACK_URL
+        value: https://login-frontend.onrender.com/callback
+
+  - type: postgres
+    name: login-db
+    plan: free
+    ipAllowList: [] 
